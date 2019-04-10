@@ -1,0 +1,22 @@
+from tkinter import *
+T = Tk()
+def fun(*args):
+    print(args)
+
+B = Button(T, text = "Quit", command = T.quit)
+B.grid(row=0, column=0, sticky=N+W)
+D = Button(T, text = "другой текст")
+D.grid(row=1, column=0, sticky=E+W)
+D.bind("<Button-1>", fun)
+C = Button(T, text = "совсем другой текст", command = fun)
+C.grid(row=2, column=0, sticky=S+N+W+E)
+L = Label(T, text = "метка")
+L.grid(row=0, column=1)
+T.columnconfigure(0, weight=1)
+T.columnconfigure(1, weight=1)
+T.rowconfigure(0, weight=1)
+T.rowconfigure(1, weight=2)
+T.rowconfigure(2, weight=1)
+T.mainloop()
+print('QQ')
+T.destroy()
