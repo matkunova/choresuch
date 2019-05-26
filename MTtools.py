@@ -57,15 +57,52 @@ class RW:
         return self.band[self.pos]
 
     def setword(self, word):
+        """ Устанавливает значение слова
+        >>> a = RW()
+        >>> a.setword("blabla")
+        >>> print(a)
+        blabla
+        """
         self.band = word
 
     def setsb(self, sb):
+        """ Устанавливает значение символа
+        >>> a = RW()
+        >>> a.setsb('b')
+        >>> print(a)
+        b
+        """
         self.band = self.band[:self.pos]+sb+self.band[self.pos+1:]
 
     def __str__(self):
         return self.band
 
     def move(self, direction):
+        """ Сдвигает каретку на шаг вправо или влево
+        >>> a = RW()
+        >>> a.setword('blabla')
+        >>> a.move('R')
+        >>> print(a.pos)
+        1
+        >>> a.move('L')
+        >>> a.move('L')
+        >>> print(a.pos)
+        0
+        >>> print(a)
+        _blabla
+        >>> b = RW()
+        >>> b.setword('j')
+        >>> b.move('R')
+        >>> print(b)
+        j_
+        >>> print(b.pos)
+        1
+        >>> b.move('L')
+        >>> a.move('R')
+        >>> print(a, b)
+        blabla j
+        """
+        
         if direction == 'L':
             if self.pos > 0:
                 self.pos -= 1
