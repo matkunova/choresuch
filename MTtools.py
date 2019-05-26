@@ -49,9 +49,10 @@ class RW:
     nulsb = '_'
     pos = 0
     
-    def __init__(self, nulsb = '_'):
+    def __init__(self, nulsb = '_', pos = 0):
         self.nulsb = nulsb
         self.band = nulsb
+        self.pos = pos # проверить
 
     def getsb(self):
         return self.band[self.pos]
@@ -116,6 +117,59 @@ class RW:
             self.pos, self.band = self.pos-1, self.band[1:]
         if self.pos < len(self.band)-1 and self.band[-1] == self.nulsb:
             self.band = self.band[:-1]
+
+class MT:
+    """ Класс, реализующий Машину Тьюринга
+
+    >>> program = parse('''q1,1->q1,1,R
+    ... q1,_->q0,0,N''')
+    >>> mt = MT('111', program)
+    >>> print(mt)
+    111, 0, q1
+    >>> mt.step()
+    >>> print(mt)
+    111, 1, q1
+    >>> mt.step()
+    >>> print(mt)
+    111, 2, q1
+    >>> mt.step()
+    >>> print(mt)
+    111_, 3, q1
+    >>> mt.step()
+    >>> print(mt)
+    1110, 3, q0
+    >>> mt.step()
+    Traceback (most recent call last):
+      File "<pyshell#52>", line 1, in <module>
+        mt.step()
+      File "/home/pauline/Полина/Desktop/Полиныч/матфак/3 курс/2 семестр/курсач/MTtools.py", line 138, in step
+        raise StopIteration
+    StopIteration
+    """
+    qB = 'q1'
+    qC = 'q1'
+    qE = 'q0'
+    rw = None
+    prog = {}
+
+    def __init__(self, w, prog, qB='q1', qE='q0', nulsb='_', pos=0):
+        self.qB = qB
+        self.qE = qE
+        self.qC = qB
+        self.prog = prog
+        self.rw = RW(nulsb, pos)
+        self.rw.setword(w)
+
+    def step(self):
+        if self.qC == self.qE:
+            raise StopIteration
+        qT, sb, D = self.prog[self.qC, self.rw.getsb()]
+        self.rw.setsb(sb)
+        self.rw.move(D)
+        self.qC = qT
+
+    def __str__(self):
+        return f'{self.rw}, {self.rw.pos}, {self.qC}'
         
         
 
