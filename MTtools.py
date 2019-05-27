@@ -6,10 +6,13 @@ def parseCmd(line, lineNo=0):
     >>> print(parseCmd('q1,1->q2,0,L'))
     ('q1', '1', 'q2', '0', 'L')
     """
+    line = line.strip()
+    if line == '':
+        return None, None, None, None, None
     s = line.split('->')
     q0,c0 = s[0].split(',')
     q1,c1,M = s[1].split(',')
-    return q0,c0,q1,c1,M
+    return q0.strip(),c0.strip(),q1.strip(),c1.strip(),M.strip()
 
 def parse(text):
     """ Из текста программы получает внутреннее представление программы
@@ -36,7 +39,8 @@ def parse(text):
     prog = {}
     for n,l in enumerate(text.split('\n')):
         q0,c0,q1,c1,M = parseCmd(l,n+1)
-        prog[q0,c0] = q1,c1,M
+        if q0:
+            prog[q0,c0] = q1,c1,M
     return prog
 
 class RW:
@@ -172,7 +176,16 @@ class MT:
         return f'{self.rw}, {self.rw.pos}, {self.qC}'
         
         
-
+if __name__ == "__main__":
+    f = open('program.mt')
+    P = parse(f.read())
+    f.close()
+    m = MT('111', P)
+    while m.qC != m.qE:
+        # print(m)
+        m.step()
+    print(m)
+    
 
 
 
