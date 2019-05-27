@@ -177,14 +177,21 @@ class MT:
         
         
 if __name__ == "__main__":
-    f = open('program.mt')
+    import sys
+   
+    f = open(sys.argv[1])
+    if len(sys.argv)>2:
+        word = sys.argv[2]
+    else:
+        word = input('Входное слово: ')
+
     P = parse(f.read())
     f.close()
-    m = MT('111', P)
+    m = MT(word, P)
     while m.qC != m.qE:
         # print(m)
         m.step()
-    print(m)
+    print(m.rw)
     
 
 
