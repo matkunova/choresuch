@@ -186,7 +186,7 @@ if __name__ == "__main__":
         word = sys.argv[2]
     else:
         word = input('Входное слово: ')
-    debug = len(sys.argv)>3
+    debug = len(sys.argv)>3 # очень временный костыль
       
     P = parse(f.read())
     f.close()

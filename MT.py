@@ -2,8 +2,8 @@
 from tkinter import *
 
 class Word(LabelFrame):
-    def __init__(self, master=None, **kwards):
-        LabelFrame.__init__(self, master, kwards)
+    def __init__(self, master=None, **kwargs):
+        LabelFrame.__init__(self, master, **kwargs)
         self.V = StringVar()
         self.V.set('')
         self.E = Entry(self, textvariable = self.V)
@@ -12,8 +12,8 @@ class Word(LabelFrame):
         self.rowconfigure(0, weight=0)
 
 class ButCtrl(LabelFrame):
-    def __init__(self, master=None, **kwards):
-        LabelFrame.__init__(self, master, kwards)
+    def __init__(self, master=None, **kwargs):
+        LabelFrame.__init__(self, master, **kwargs)
         self.B = Button(self, text="Запустить")
         self.B.grid(row=0, column=0, sticky="nw")
         self.F = Button(self, text="Шаг вперёд")
@@ -27,35 +27,52 @@ class ButCtrl(LabelFrame):
         self.C = Button(self, text="Очистить")
         self.C.grid(row=0, column=5, sticky="nw")
 
+class PrCtrl(Frame):
+    def __init__(self, master=None, **kwargs):
+        Frame.__init__(self, master, **kwargs)
+        self.R = Button(self, text="Загрузить")
+        self.R.grid(row=0, column=0, sticky="nw")
+        self.W = Button(self, text="Записать")
+        self.W.grid(row=0, column=1, sticky="nw")
+        self.M = Button(self, text="Скомпилировать")
+        self.M.grid(row=0, column=2, sticky="nw")
+        self.C = Button(self, text="Очистить")
+        self.C.grid(row=0, column=3, sticky="nw")
+
 class Pr(LabelFrame):
-    def __init__(self, master=None, **kwards):
-        LabelFrame.__init__(self, master, kwards)
+    def __init__(self, master=None, **kwargs):
+        LabelFrame.__init__(self, master, **kwargs)
         self.V = StringVar()
         self.V.set('Текст программы')
+        self.B = PrCtrl(self)
+        self.B.grid(row=0, column=0, sticky="ew")
         self.E = Entry(self, textvariable = self.V)
-        self.E.grid(row=0, column=0, sticky='news')
+        self.E.grid(row=1, column=0, sticky='news')
+        
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure(0, weight=0)
+        self.columnconfigure(1, weight=1)
+        self.rowconfigure(1, weight=1)
 
 class Table(LabelFrame):
-    def __init__(self, master=None, **kwards):
-        LabelFrame.__init__(self, master, kwards)
+    def __init__(self, master=None, **kwargs):
+        LabelFrame.__init__(self, master, **kwargs)
         self.L = Label(self, text='Здесь будет таблица')
         self.L.grid(row=0, column=0, sticky='news')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
 class Journal(LabelFrame):
-    def __init__(self, master=None, **kwards):
-        LabelFrame.__init__(self, master, kwards)
+    def __init__(self, master=None, **kwargs):
+        LabelFrame.__init__(self, master, **kwargs)
         self.J = Label(self, text='Это события')
         self.J.grid(row=0, column=0, sticky='news')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
 class Program(Frame):
-    def __init__(self, **kwards):
-        Frame.__init__(self, **kwards)
+    def __init__(self, **kwargs):
+        Frame.__init__(self, **kwargs)
         self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
         self.grid(row=0, column=0, sticky='news')
