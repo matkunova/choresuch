@@ -177,19 +177,26 @@ class MT:
         
         
 if __name__ == "__main__":
+    # TODO Argparse
     import sys
+    from pprint import pprint
    
     f = open(sys.argv[1])
     if len(sys.argv)>2:
         word = sys.argv[2]
     else:
         word = input('Входное слово: ')
-
+    debug = len(sys.argv)>3
+      
     P = parse(f.read())
     f.close()
     m = MT(word, P)
+    if debug:
+        pprint(P)
     while m.qC != m.qE:
-        # print(m)
+        if debug:
+            print(m)
+            input("> ")
         m.step()
     print(m.rw)
     
