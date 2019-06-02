@@ -19,7 +19,7 @@ class ButCtrl(LabelFrame):
         LabelFrame.__init__(self, master, **kwargs)
         self.B = Button(self, text="Запустить")
         self.B.grid(row=0, column=0, sticky="nw")
-        self.F = Button(self, text="Шаг вперёд")
+        self.F = Button(self, text="Шаг вперёд", command = self.forward)
         self.F.grid(row=0, column=1, sticky="nw")
         self.Bk = Button(self, text="Шаг назад")
         self.Bk.grid(row=0, column=2, sticky="nw")
@@ -29,6 +29,11 @@ class ButCtrl(LabelFrame):
         self.Bg.grid(row=0, column=4, sticky="nw")
         self.C = Button(self, text="Очистить")
         self.C.grid(row=0, column=5, sticky="nw")
+
+    def forward(self):
+        self.master.MT.step()
+        self.master.W.V.set(str(self.master.MT.rw))
+        self.master.J.J.insert(END, str(self.master.MT) + '\n')
 
 class PrCtrl(Frame):
     def loadFile(self):
@@ -51,6 +56,7 @@ class PrCtrl(Frame):
     def Compile(self):
         self.master.Comp, log = parse(self.master.E.get(1.0, END))
         self.master.master.J.J.insert(END, log + '\n')
+        self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp)
 
     def Clean(self):
         self.master.E.delete(1.0, END)
@@ -113,6 +119,7 @@ class Program(Frame):
         self.T.grid(row=2, column=1, sticky='news')
         self.J = Journal(self, text = "Журнал")
         self.J.grid(row=3, column=1, sticky='news')
+        self.MT = MT(self.W.V.get(), self.Tp.Comp) 
         self.columnconfigure(0, weight=0)
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=0)
