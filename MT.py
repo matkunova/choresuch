@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from tkinter import *
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 class Word(LabelFrame):
     def __init__(self, master=None, **kwargs):
@@ -30,17 +30,28 @@ class ButCtrl(LabelFrame):
 
 class PrCtrl(Frame):
     def loadFile(self):
-        self.Fname = askopenfilename()
+        self.Fname = askopenfilename(filetypes=[('MT programs','*.mt'),
+                                                ('All files','*.*')],
+                                     title = "Выбрать файл")
         O = open(self.Fname)
         self.master.E.delete(1.0, END)
         self.master.E.insert(1.0, O.read())
+        O.close()
+
+    def saveFile(self):
+        self.Fname = asksaveasfilename(filetypes=[('MT programs','*.mt'),
+                                                ('All files','*.*')],
+                                   title = "Сохранить файл")
+        O = open(self.Fname, 'w')
+        O.write(self.master.E.get(1.0, END))
+        O.close()
        
         
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
         self.R = Button(self, text="Загрузить", command = self.loadFile)
         self.R.grid(row=0, column=0, sticky="nw")
-        self.W = Button(self, text="Записать")
+        self.W = Button(self, text="Записать", command = self.saveFile)
         self.W.grid(row=0, column=1, sticky="nw")
         self.M = Button(self, text="Скомпилировать")
         self.M.grid(row=0, column=2, sticky="nw")
