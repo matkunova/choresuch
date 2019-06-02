@@ -25,7 +25,7 @@ def parse(text):
     ... q3,1->q4,0,N
     ... q4,0->q2,0,R
     ... q4,1->q0,0,N'''
-    >>> program = parse(P)
+    >>> program, log = parse(P)
     >>> pprint.pprint(program)
     {('q1', '0'): ('q3', '1', 'R'),
      ('q1', '1'): ('q2', '0', 'L'),
@@ -35,13 +35,16 @@ def parse(text):
      ('q4', '0'): ('q2', '0', 'R'),
      ('q4', '1'): ('q0', '0', 'N')}
     """
-    
+    log = ''
     prog = {}
     for n,l in enumerate(text.split('\n')):
-        q0,c0,q1,c1,M = parseCmd(l,n+1)
-        if q0:
-            prog[q0,c0] = q1,c1,M
-    return prog
+        try:
+            q0,c0,q1,c1,M = parseCmd(l,n+1)
+            if q0:
+                prog[q0,c0] = q1,c1,M
+        except Exception:
+            log += f"Ошибка в строке {n}: '{l}'"
+    return prog, log
 
 class RW:
     """Считывающее устройство Машины Тьюринга
@@ -125,7 +128,7 @@ class RW:
 class MT:
     """ Класс, реализующий Машину Тьюринга
 
-    >>> program = parse('''q1,1->q1,1,R
+    >>> program, log = parse('''q1,1->q1,1,R
     ... q1,_->q0,0,N''')
     >>> mt = MT('111', program)
     >>> print(mt)
@@ -188,8 +191,9 @@ if __name__ == "__main__":
         word = input('Входное слово: ')
     debug = len(sys.argv)>3 # очень временный костыль
       
-    P = parse(f.read())
+    P, log = parse(f.read())
     f.close()
+    print(log)
     m = MT(word, P)
     if debug:
         pprint(P)
