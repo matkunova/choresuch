@@ -31,9 +31,17 @@ class ButCtrl(LabelFrame):
         self.C.grid(row=0, column=5, sticky="nw")
 
     def forward(self):
-        self.master.MT.step()
-        self.master.W.V.set(str(self.master.MT.rw))
-        self.master.J.J.insert(END, str(self.master.MT) + '\n')
+        try:
+            self.master.MT.step()
+        except StopIteration:
+            self.master.J.J.insert(END, "Выполнение закончено\n")
+        except KeyError:
+            self.master.J.J.insert(END, f"Нет правила <{self.master.MT.qC}, {self.master.MT.rw.getsb()}>\n")
+        except Exception:
+            self.master.J.J.insert(END, "Произошла НЕХ")
+        else:    
+            self.master.W.V.set(str(self.master.MT.rw))
+            self.master.J.J.insert(END, str(self.master.MT) + '\n')
 
 class PrCtrl(Frame):
     def loadFile(self):
@@ -55,8 +63,10 @@ class PrCtrl(Frame):
 
     def Compile(self):
         self.master.Comp, log = parse(self.master.E.get(1.0, END))
+        self.master.master.J.J.delete(1.0, END)
         self.master.master.J.J.insert(END, log + '\n')
         self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp)
+        
 
     def Clean(self):
         self.master.E.delete(1.0, END)
@@ -96,6 +106,7 @@ class Table(LabelFrame):
         self.rowconfigure(0, weight=1)
 
 class Journal(LabelFrame):
+    #TODO autoscroll
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
         self.J = Text(self)
