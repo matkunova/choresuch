@@ -190,7 +190,18 @@ class MT:
         aL = {c for q,c in self.prog}
         aR = {c for q,c,m in self.prog.values()}
         return sorted(aW|aL|aR)
-        
+
+    def states(self):
+        """
+        >>> program, log = parse('''q1,1->q1,1,R
+        ... q1,_->q0,0,N''')
+        >>> mt = MT('112', program)
+        >>> mt.states()
+        ['q1']
+        """
+        sL = {q for q,c in self.prog}
+        sR = {q for q,c,m in self.prog.values()}
+        return sorted(sL|sR - {self.qE})
         
 if __name__ == "__main__":
     # TODO Argparse
