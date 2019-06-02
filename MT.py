@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from tkinter import *
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+from MTtools import MT, parse
+from pprint import pprint
 
 class Word(LabelFrame):
     def __init__(self, master=None, **kwargs):
@@ -45,6 +47,10 @@ class PrCtrl(Frame):
         O = open(self.Fname, 'w')
         O.write(self.master.E.get(1.0, END))
         O.close()
+
+    def Compile(self):
+        self.master.Comp = parse(self.master.E.get(1.0, END))
+        pprint(self.master.Comp)
        
         
     def __init__(self, master=None, **kwargs):
@@ -53,7 +59,7 @@ class PrCtrl(Frame):
         self.R.grid(row=0, column=0, sticky="nw")
         self.W = Button(self, text="Записать", command = self.saveFile)
         self.W.grid(row=0, column=1, sticky="nw")
-        self.M = Button(self, text="Скомпилировать")
+        self.M = Button(self, text="Скомпилировать", command = self.Compile)
         self.M.grid(row=0, column=2, sticky="nw")
         self.C = Button(self, text="Очистить")
         self.C.grid(row=0, column=3, sticky="nw")
@@ -66,9 +72,8 @@ class Pr(LabelFrame):
         self.B = PrCtrl(self)
         self.B.grid(row=0, column=0, sticky="ew")
         self.E = Text(self, width=20)
-        
         self.E.grid(row=1, column=0, sticky='news')
-        
+        self.Comp = {}
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=0)
         self.columnconfigure(1, weight=1)
