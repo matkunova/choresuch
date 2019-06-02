@@ -49,9 +49,11 @@ class PrCtrl(Frame):
         O.close()
 
     def Compile(self):
-        self.master.Comp = parse(self.master.E.get(1.0, END))
+        self.master.Comp, log = parse(self.master.E.get(1.0, END))
         pprint(self.master.Comp)
-       
+
+    def Clean(self):
+        self.master.E.delete(1.0, END)
         
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
@@ -61,7 +63,7 @@ class PrCtrl(Frame):
         self.W.grid(row=0, column=1, sticky="nw")
         self.M = Button(self, text="Скомпилировать", command = self.Compile)
         self.M.grid(row=0, column=2, sticky="nw")
-        self.C = Button(self, text="Очистить")
+        self.C = Button(self, text="Очистить", command = self.Clean)
         self.C.grid(row=0, column=3, sticky="nw")
 
 class Pr(LabelFrame):
