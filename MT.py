@@ -50,7 +50,7 @@ class PrCtrl(Frame):
 
     def Compile(self):
         self.master.Comp, log = parse(self.master.E.get(1.0, END))
-        pprint(self.master.Comp)
+        self.master.master.J.J.insert(END, log + '\n')
 
     def Clean(self):
         self.master.E.delete(1.0, END)
@@ -92,7 +92,7 @@ class Table(LabelFrame):
 class Journal(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
-        self.J = Label(self, text='Это события')
+        self.J = Text(self)
         self.J.grid(row=0, column=0, sticky='news')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
