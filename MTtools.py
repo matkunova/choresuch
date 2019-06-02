@@ -177,6 +177,19 @@ class MT:
 
     def __str__(self):
         return f'{self.rw}, {self.rw.pos}, {self.qC}'
+
+    def alphabet(self):
+        """ Алфавит Машины Тьюринга
+        >>> program, log = parse('''q1,1->q1,1,R
+        ... q1,_->q0,0,N''')
+        >>> mt = MT('112', program)
+        >>> mt.alphabet()
+        ['0', '1', '2', '_']
+        """
+        aW = set(str(self.rw)+self.rw.nulsb)
+        aL = {c for q,c in self.prog}
+        aR = {c for q,c,m in self.prog.values()}
+        return sorted(aW|aL|aR)
         
         
 if __name__ == "__main__":
