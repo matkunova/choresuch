@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from tkinter import *
+from tkinter.filedialog import askopenfilename
 
 class Word(LabelFrame):
     def __init__(self, master=None, **kwargs):
@@ -28,9 +29,16 @@ class ButCtrl(LabelFrame):
         self.C.grid(row=0, column=5, sticky="nw")
 
 class PrCtrl(Frame):
+    def loadFile(self):
+        self.Fname = askopenfilename()
+        O = open(self.Fname)
+        self.master.E.delete(1.0, END)
+        self.master.E.insert(1.0, O.read())
+       
+        
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
-        self.R = Button(self, text="Загрузить")
+        self.R = Button(self, text="Загрузить", command = self.loadFile)
         self.R.grid(row=0, column=0, sticky="nw")
         self.W = Button(self, text="Записать")
         self.W.grid(row=0, column=1, sticky="nw")
@@ -42,11 +50,12 @@ class PrCtrl(Frame):
 class Pr(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
-        self.V = StringVar()
-        self.V.set('Текст программы')
+        # self.V = StringVar()
+        # self.V.set('Текст программы')
         self.B = PrCtrl(self)
         self.B.grid(row=0, column=0, sticky="ew")
-        self.E = Entry(self, textvariable = self.V)
+        self.E = Text(self, width=20)
+        
         self.E.grid(row=1, column=0, sticky='news')
         
         self.columnconfigure(0, weight=1)
