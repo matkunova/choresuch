@@ -24,7 +24,7 @@ class Word(LabelFrame):
 class ButCtrl(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
-        self.B = Button(self, text="Запустить")
+        self.B = Button(self, text="Выполнить", command = self.do)
         self.B.grid(row=0, column=0, sticky="nw")
         self.F = Button(self, text="Шаг вперёд", command = self.forward)
         self.F.grid(row=0, column=1, sticky="nw")
@@ -49,6 +49,12 @@ class ButCtrl(LabelFrame):
         else:    
             self.master.W.V.set(str(self.master.MT.rw))
             self.master.J.J.insert(END, str(self.master.MT) + '\n')
+            return True
+        return False
+
+    def do(self):
+        while self.forward():
+            pass
 
 class PrCtrl(Frame):
     def loadFile(self):
