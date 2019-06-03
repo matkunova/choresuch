@@ -73,8 +73,20 @@ class RW:
         >>> a.setword("blabla")
         >>> print(a)
         blabla
+        >>> a.move('R'); a.move('R'); a.move('R')
+        >>> a.getsb()
+        'b'
+        >>> a.setword("ef")
+        >>> a.getsb()
+        'f'
         """
+        if not word:
+            word = self.nulsb
+        if len(word) <= self.pos:
+            self.pos = len(word)-1
+            
         self.band = word
+        
 
     def setsb(self, sb):
         """ Устанавливает значение символа

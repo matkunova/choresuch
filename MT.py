@@ -17,9 +17,7 @@ class Word(LabelFrame):
 
     def updateWord(self, *args):
         self.master.MT.rw.band = self.V.get()
-        if self.master.MT.rw.pos >= len(self.master.MT.rw.band):
-            self.master.MT.rw.pos = len(self.master.MT.rw.band)-1
-        
+               
 
 class ButCtrl(LabelFrame):
     def __init__(self, master=None, **kwargs):
@@ -35,7 +33,7 @@ class ButCtrl(LabelFrame):
         self.Bk.grid(row=0, column=3, sticky="nw")        
         self.Bg = Button(self, text="В начало")
         self.Bg.grid(row=0, column=4, sticky="nw")
-        self.C = Button(self, text="Очистить")
+        self.C = Button(self, text="Очистить", command = self.clean)
         self.C.grid(row=0, column=5, sticky="nw")
 
     def forward(self, show=True):
@@ -60,6 +58,9 @@ class ButCtrl(LabelFrame):
             if self.I.get():
                 self.I.set(0)
                 break
+            
+    def clean(self):
+        self.master.W.V.set('')
 
         
 
