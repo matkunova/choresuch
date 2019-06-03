@@ -42,15 +42,15 @@ class ButCtrl(LabelFrame):
         try:
             self.master.MT.step()
         except StopIteration:
-            self.master.J.J.insert(END, "Выполнение закончено\n")
+            self.master.J.append("Выполнение закончено")
         except KeyError:
-            self.master.J.J.insert(END, f"Нет правила <{self.master.MT.qC}, {self.master.MT.rw.getsb()}>\n")
+            self.master.J.append(f"Нет правила <{self.master.MT.qC}, {self.master.MT.rw.getsb()}>")
         except Exception:
-            self.master.J.J.insert(END, "Произошла НЕХ")
+            self.master.J.append("Произошла НЕХ")
         else:
             self.master.W.V.set(str(self.master.MT.rw))
             if show: 
-                self.master.J.J.insert(END, str(self.master.MT) + '\n')
+                self.master.J.append(str(self.master.MT))
             return True
         return False
 
@@ -84,7 +84,7 @@ class PrCtrl(Frame):
     def Compile(self):
         self.master.Comp, log = parse(self.master.E.get(1.0, END))
         self.master.master.J.J.delete(1.0, END)
-        self.master.master.J.J.insert(END, log + '\n')
+        self.master.master.J.append(log)
         self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp)
         
 
@@ -126,13 +126,20 @@ class Table(LabelFrame):
         self.rowconfigure(0, weight=1)
 
 class Journal(LabelFrame):
-    #TODO autoscroll
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
         self.J = Text(self)
         self.J.grid(row=0, column=0, sticky='news')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
+
+    def append(self, text):
+        self.J["state"]=NORMAL
+        self.J.insert(END, text+'\n')
+        self.J.see(END)
+        self.J["state"]=DISABLED
+
+        
 
 class Program(Frame):
     def __init__(self, **kwargs):
