@@ -9,10 +9,17 @@ class Word(LabelFrame):
         LabelFrame.__init__(self, master, **kwargs)
         self.V = StringVar()
         self.V.set('')
+        self.V.trace("w", self.updateWord)
         self.E = Entry(self, textvariable = self.V)
         self.E.grid(row=0, column=0, sticky='ew')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=0)
+
+    def updateWord(self, *args):
+        self.master.MT.rw.band = self.V.get()
+        if self.master.MT.rw.pos >= len(self.master.MT.rw.band):
+            self.master.MT.rw.pos = len(self.master.MT.rw.band)-1
+        
 
 class ButCtrl(LabelFrame):
     def __init__(self, master=None, **kwargs):
