@@ -24,21 +24,21 @@ class Word(LabelFrame):
 class ButCtrl(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
-        self.B = Button(self, text="Выполнить", command = self.do)
-        self.B.grid(row=0, column=0, sticky="nw")
-        self.F = Button(self, text="Шаг вперёд", command = self.forward)
-        self.F.grid(row=0, column=1, sticky="nw")
-        self.Bk = Button(self, text="Шаг назад")
-        self.Bk.grid(row=0, column=2, sticky="nw")
         self.I = IntVar(0)
         self.S = Checkbutton(self, text="Стоп", variable = self.I)        
-        self.S.grid(row=0, column=3, sticky="nw")
+        self.S.grid(row=0, column=0, sticky="news")
+        self.B = Button(self, text="Выполнить", command = self.do)
+        self.B.grid(row=0, column=1, sticky="nw")
+        self.F = Button(self, text="Шаг вперёд", command = self.forward)
+        self.F.grid(row=0, column=2, sticky="nw")
+        self.Bk = Button(self, text="Шаг назад")
+        self.Bk.grid(row=0, column=3, sticky="nw")        
         self.Bg = Button(self, text="В начало")
         self.Bg.grid(row=0, column=4, sticky="nw")
         self.C = Button(self, text="Очистить")
         self.C.grid(row=0, column=5, sticky="nw")
 
-    def forward(self):
+    def forward(self, show=True):
         try:
             self.master.MT.step()
         except StopIteration:
@@ -47,15 +47,16 @@ class ButCtrl(LabelFrame):
             self.master.J.J.insert(END, f"Нет правила <{self.master.MT.qC}, {self.master.MT.rw.getsb()}>\n")
         except Exception:
             self.master.J.J.insert(END, "Произошла НЕХ")
-        else:    
+        else:
             self.master.W.V.set(str(self.master.MT.rw))
-            self.master.J.J.insert(END, str(self.master.MT) + '\n')
+            if show: 
+                self.master.J.J.insert(END, str(self.master.MT) + '\n')
             return True
         return False
 
     def do(self):
-        while self.forward():
-            print(self.I.get())
+        self.I.set(0)
+        while self.forward(show=False):
             if self.I.get():
                 self.I.set(0)
                 break
