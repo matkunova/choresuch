@@ -30,7 +30,8 @@ class ButCtrl(LabelFrame):
         self.F.grid(row=0, column=1, sticky="nw")
         self.Bk = Button(self, text="Шаг назад")
         self.Bk.grid(row=0, column=2, sticky="nw")
-        self.S = Button(self, text="Стоп")
+        self.I = IntVar(0)
+        self.S = Checkbutton(self, text="Стоп", variable = self.I)        
         self.S.grid(row=0, column=3, sticky="nw")
         self.Bg = Button(self, text="В начало")
         self.Bg.grid(row=0, column=4, sticky="nw")
@@ -54,7 +55,12 @@ class ButCtrl(LabelFrame):
 
     def do(self):
         while self.forward():
-            pass
+            print(self.I.get())
+            if self.I.get():
+                self.I.set(0)
+                break
+
+        
 
 class PrCtrl(Frame):
     def loadFile(self):
