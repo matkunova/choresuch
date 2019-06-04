@@ -58,10 +58,11 @@ class RW:
     band = ''
     nulsb = '_'
     pos = 0
+    initial = ''
     
     def __init__(self, nulsb = '_', pos = 0):
         self.nulsb = nulsb
-        self.band = nulsb
+        self.setword(nulsb)
         self.pos = pos # проверить
 
     def getsb(self):
@@ -85,7 +86,7 @@ class RW:
         if len(word) <= self.pos:
             self.pos = len(word)-1
             
-        self.band = word
+        self.band = self.initial = word
         
 
     def setsb(self, sb):
@@ -171,6 +172,7 @@ class MT:
     qB = 'q1'
     qC = 'q1'
     qE = 'q0'
+    ipos = 0
     rw = None
     prog = {}
 
@@ -179,6 +181,7 @@ class MT:
         self.qE = qE
         self.qC = qB
         self.prog = prog
+        self.ipos = pos
         self.rw = RW(nulsb, pos)
         self.rw.setword(w)
 
@@ -217,6 +220,12 @@ class MT:
         sL = {q for q,c in self.prog}
         sR = {q for q,c,m in self.prog.values()}
         return sorted(sL|sR - {self.qE})
+
+    def reset(self):
+        self.rw.pos = self.ipos
+        self.rw.setword(self.rw.initial)
+        self.qC = self.qB
+        
         
 if __name__ == "__main__":
     # TODO Argparse

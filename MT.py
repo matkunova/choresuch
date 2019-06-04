@@ -32,7 +32,7 @@ class ButCtrl(LabelFrame):
         self.F.grid(row=0, column=2, sticky="nw")
         self.Bk = Button(self, text="Шаг назад")
         self.Bk.grid(row=0, column=3, sticky="nw")        
-        self.Bg = Button(self, text="В начало")
+        self.Bg = Button(self, text="В начало", command = self.reset)
         self.Bg.grid(row=0, column=4, sticky="nw")
         self.C = Button(self, text="Очистить", command = self.clean)
         self.C.grid(row=0, column=5, sticky="nw")
@@ -63,6 +63,10 @@ class ButCtrl(LabelFrame):
     def clean(self):
         self.master.W.V.set('')
 
+    def reset(self):
+        self.master.MT.reset()
+        self.master.W.V.set(self.master.MT.rw.band)
+        self.master.J.append("reset "+str(self.master.MT))
         
 
 class PrCtrl(Frame):
