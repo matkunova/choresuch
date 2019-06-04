@@ -204,10 +204,10 @@ class MT:
         >>> mt.alphabet()
         ['0', '1', '2', '_']
         """
-        aW = set(str(self.rw)+self.rw.nulsb)
+        aW = set(str(self.rw))
         aL = {c for q,c in self.prog}
         aR = {c for q,c,m in self.prog.values()}
-        return sorted(aW|aL|aR)
+        return sorted((aW|aL|aR)-{self.rw.nulsb})+[self.rw.nulsb]
 
     def states(self):
         """
@@ -219,7 +219,7 @@ class MT:
         """
         sL = {q for q,c in self.prog}
         sR = {q for q,c,m in self.prog.values()}
-        return sorted(sL|sR - {self.qE})
+        return [self.qB]+sorted(sL|sR - {self.qE, self.qB})
 
     def reset(self):
         self.rw.pos = self.ipos

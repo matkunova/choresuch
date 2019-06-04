@@ -30,12 +30,12 @@ class ButCtrl(LabelFrame):
         self.B.grid(row=0, column=1, sticky="nw")
         self.F = Button(self, text="Шаг вперёд", command = self.forward)
         self.F.grid(row=0, column=2, sticky="nw")
-        self.Bk = Button(self, text="Шаг назад")
-        self.Bk.grid(row=0, column=3, sticky="nw")        
+##        self.Bk = Button(self, text="Шаг назад")
+##        self.Bk.grid(row=0, column=3, sticky="nw")        
         self.Bg = Button(self, text="В начало", command = self.reset)
-        self.Bg.grid(row=0, column=4, sticky="nw")
+        self.Bg.grid(row=0, column=3, sticky="nw")
         self.C = Button(self, text="Очистить", command = self.clean)
-        self.C.grid(row=0, column=5, sticky="nw")
+        self.C.grid(row=0, column=4, sticky="nw")
 
     def forward(self, show=True):
         try:
@@ -92,7 +92,7 @@ class PrCtrl(Frame):
         self.master.master.J.J.delete(1.0, END)
         self.master.master.J.append(log)
         self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp)
-        
+        self.master.master.T.fill()
 
     def Clean(self):
         self.master.E.delete(1.0, END)
@@ -126,10 +126,32 @@ class Pr(LabelFrame):
 class Table(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
-        self.L = Label(self, text='Здесь будет таблица')
-        self.L.grid(row=0, column=0, sticky='news')
+        self.T = Text(self, wrap = 'none')
+        self.T.grid(row=0, column=0, sticky='news')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
+
+    def fill(self):
+        widthS = max(len(q) for q in self.master.MT.states())
+        #         c       d      _
+        #  q1  q1,c,R  q1,d,R  q1,_,L
+        # q12 q12,d,L
+        f0 = "{:>"+str(widthS)+"} "
+        fc = "{:^"+str(widthS+4)+"} "
+        f3 = "{:>"+str(widthS)+"},{},{} "
+        self.T.delete(1.0, END)
+        self.T.insert(END, f0.format(" "))
+        for c in self.master.MT.alphabet():
+            self.T.insert(END, fc.format(c))
+        self.T.insert(END, '\n')
+        for q in self.master.MT.states():
+            self.T.insert(END, f0.format(q))
+            for c in self.master.MT.alphabet():
+                if (q,c) in self.master.MT.prog:
+                    self.T.insert(END, f3.format(*(self.master.MT.prog[q,c])))
+                else:
+                    self.T.insert(END, f3.format(*"   "))
+            self.T.insert(END, '\n')
 
 class Journal(LabelFrame):
     def __init__(self, master=None, **kwargs):
