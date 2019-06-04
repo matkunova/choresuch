@@ -31,7 +31,7 @@ class ButCtrl(LabelFrame):
         LabelFrame.__init__(self, master, **kwargs)
         self.P = Label(self, text = "начальное\nположение")
         self.P.grid(row=0, column=0, sticky='news')
-        self.sp = Spinbox(self, from_=0, increment=1, width=3)
+        self.sp = Spinbox(self, from_=0, to=1, increment=1, width=3)        
         self.sp.grid(row=0, column=1, sticky='ew')
         self.Q = Label(self, text = "начальное\nсостояние")
         self.Q.grid(row=0, column=2, sticky='news')
@@ -116,7 +116,8 @@ class PrCtrl(Frame):
         if qB not in states:
             self.master.master.B.q.set(qFirst)
             qB = qFirst
-        self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp, qB=qB)
+        self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp, qB=qB, pos = int(self.master.master.B.sp.get()))
+        self.master.master.B.sp["to"] = len(str(self.master.master.MT.rw))-1
         self.master.master.T.fill()
         self.master.master.T.markQC()
         self.master.master.B.q['values'] = self.master.master.MT.states()

@@ -6,13 +6,14 @@ def parseCmd(line, lineNo=0):
     >>> print(parseCmd('q1,1->q2,0,L'))
     ('q1', '1', 'q2', '0', 'L')
     """
+
     line = line.strip()
-    if line == '':
+    if line == '' or line.startswith("#"):
         return None, None, None, None, None
     s = line.split('->')
     q0,c0 = s[0].split(',')
     q1,c1,M = s[1].split(',')
-    return q0.strip(),c0.strip(),q1.strip(),c1.strip(),M.strip()
+    return q0.strip(),c0.strip()[0],q1.strip(),c1.strip()[0],M.strip()[0]
 
 def parse(text):
     """ Из текста программы получает внутреннее представление программы
@@ -38,7 +39,7 @@ def parse(text):
     # TODO сохранять номер строки
     # TODO проверять повторное задание состояния
     
-    log = ''
+    log = []
     prog = {}
     for n,l in enumerate(text.split('\n')):
         try:
@@ -46,8 +47,8 @@ def parse(text):
             if q0:
                 prog[q0,c0] = q1,c1,M
         except Exception:
-            log += f"Ошибка в строке {n}: '{l}'"
-    return prog, log
+            log.append(f"Ошибка в строке {n}: '{l}'")
+    return prog, "\n".join(log)
 
 class RW:
     """Считывающее устройство Машины Тьюринга
@@ -215,7 +216,7 @@ class MT:
         ... q1,_->q0,0,N''')
         >>> mt = MT('112', program)
         >>> mt.states()
-        ['q1']
+        ['q1', 'q0']
         """
         sL = {q for q,c in self.prog}
         sR = {q for q,c,m in self.prog.values()}
@@ -232,6 +233,9 @@ if __name__ == "__main__":
     import sys
     from pprint import pprint
    
+    if len(sys.argv)<2:
+        print(f"Запуск: {sys.argv[0]} программа.mt [входное_слово]", file=sys.stderr)
+        sys.exit(0)
     f = open(sys.argv[1])
     if len(sys.argv)>2:
         word = sys.argv[2]
