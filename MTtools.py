@@ -219,7 +219,7 @@ class MT:
         """
         sL = {q for q,c in self.prog}
         sR = {q for q,c,m in self.prog.values()}
-        return [self.qB]+sorted(sL|sR - {self.qE, self.qB})
+        return [self.qB]+sorted((sL|sR) - {self.qE, self.qB})
 
     def reset(self):
         self.rw.pos = self.ipos

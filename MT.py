@@ -4,6 +4,9 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename
 from MTtools import MT, parse
 from pprint import pprint
 
+def tag(s):
+    return str(s).replace('.', ',').replace(' ', '…')
+
 class Word(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
@@ -142,16 +145,19 @@ class Table(LabelFrame):
         self.T.delete(1.0, END)
         self.T.insert(END, f0.format(" "))
         for c in self.master.MT.alphabet():
-            self.T.insert(END, fc.format(c))
+            self.T.insert(END, fc.format(c), tag(c))
         self.T.insert(END, '\n')
         for q in self.master.MT.states():
-            self.T.insert(END, f0.format(q))
+            self.T.insert(END, f0.format(q), tag(q))
             for c in self.master.MT.alphabet():
                 if (q,c) in self.master.MT.prog:
-                    self.T.insert(END, f3.format(*(self.master.MT.prog[q,c])))
+                    self.T.insert(END, f3.format(*(self.master.MT.prog[q,c])), tag(q+c))
                 else:
-                    self.T.insert(END, f3.format(*"   "))
+                    self.T.insert(END, f3.format(*"   "), tag(q+c))
             self.T.insert(END, '\n')
+        self.T.tag_config('q1', background='green')
+        self.T.tag_config('1', background='skyblue')
+        self.T.tag_config('q11', background='peachpuff')
 
 class Journal(LabelFrame):
     def __init__(self, master=None, **kwargs):
