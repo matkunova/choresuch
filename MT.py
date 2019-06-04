@@ -3,20 +3,21 @@ from tkinter import *
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from MTtools import MT, parse
 from pprint import pprint
+from tkinter.ttk import Combobox
 
 def tag(s):
     return str(s).replace('.', ',').replace(' ', '…')
 
     
-
 class Word(LabelFrame):
     def __init__(self, master=None, **kwargs):
-        LabelFrame.__init__(self, master, **kwargs)
+        LabelFrame.__init__(self, master, **kwargs)        
         self.V = StringVar()
         self.V.set('')
         self.E = Entry(self, textvariable = self.V)
         self.E.bind("<KeyPress>", self.keyPressed)
         self.E.grid(row=0, column=0, sticky='ew')
+         
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=0)
 
@@ -28,19 +29,28 @@ class Word(LabelFrame):
 class ButCtrl(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
+        self.P = Label(self, text = "начальное\nположение")
+        self.P.grid(row=0, column=0, sticky='news')
+        self.sp = Spinbox(self, from_=0, increment=1, width=3)
+        self.sp.grid(row=0, column=1, sticky='ew')
+        self.Q = Label(self, text = "начальное\nсостояние")
+        self.Q.grid(row=0, column=2, sticky='news')
+        self.q = Combobox(self, values = ['q1'], width=3)
+        self.q.set('q1')
+        self.q.grid(row=0, column=3, sticky='ew')
         self.I = IntVar(0)
         self.S = Checkbutton(self, text="Стоп", variable = self.I)        
-        self.S.grid(row=0, column=0, sticky="news")
+        self.S.grid(row=0, column=4, sticky="news")
         self.B = Button(self, text="Выполнить", command = self.do)
-        self.B.grid(row=0, column=1, sticky="nw")
+        self.B.grid(row=0, column=5, sticky="nw")
         self.F = Button(self, text="Шаг вперёд", command = self.forward)
-        self.F.grid(row=0, column=2, sticky="nw")
+        self.F.grid(row=0, column=6, sticky="nw")
 ##        self.Bk = Button(self, text="Шаг назад")
 ##        self.Bk.grid(row=0, column=3, sticky="nw")        
         self.Bg = Button(self, text="В начало", command = self.reset)
-        self.Bg.grid(row=0, column=3, sticky="nw")
+        self.Bg.grid(row=0, column=7, sticky="nw")
         self.C = Button(self, text="Очистить", command = self.clean)
-        self.C.grid(row=0, column=4, sticky="nw")
+        self.C.grid(row=0, column=8, sticky="nw")
 
     def forward(self, show=True):
         try:
@@ -72,8 +82,11 @@ class ButCtrl(LabelFrame):
     def reset(self):
         self.master.MT.reset()
         self.master.W.V.set(self.master.MT.rw.band)
-        self.master.J.append("reset "+str(self.master.MT))
-        
+        self.master.J.append("Установлено исходное состояние Машины Тьюринга "+str(self.master.MT))
+        self.master.T.markQC()
+
+    def setState(self, *args):
+        print(args)
 
 class PrCtrl(Frame):
     def loadFile(self):
@@ -96,10 +109,18 @@ class PrCtrl(Frame):
     def Compile(self):
         self.master.Comp, log = parse(self.master.E.get(1.0, END))
         self.master.master.J.J.delete(1.0, END)
-        self.master.master.J.append(log)
-        self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp)
+        self.master.master.J.append(log if log else "Компиляция прошла успешно")
+        states = [qc[0] for qc in self.master.master.Tp.Comp.keys()]
+        qFirst = states[0]
+        qB = self.master.master.B.q.get()
+        if qB not in states:
+            self.master.master.B.q.set(qFirst)
+            qB = qFirst
+        self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp, qB=qB)
         self.master.master.T.fill()
         self.master.master.T.markQC()
+        self.master.master.B.q['values'] = self.master.master.MT.states()
+        self.master.master.B.q.set(self.master.master.MT.qB)
 
     def Clean(self):
         self.master.E.delete(1.0, END)
@@ -196,7 +217,7 @@ class Program(Frame):
         self.grid(row=0, column=0, sticky='news')
         self.W = Word(self, text = "Слово")
         self.W.grid(row=0, column=0, columnspan=2, sticky='ew')
-        self.B = ButCtrl(self, text = "Управление кнопками")
+        self.B = ButCtrl(self, text = "Управление")
         self.B.grid(row=1, column=0, columnspan=2)
         self.Tp = Pr(self, text = "Текст программы")
         self.Tp.grid(row=2, column=0,rowspan=2, sticky='news')
