@@ -7,6 +7,8 @@ from pprint import pprint
 def tag(s):
     return str(s).replace('.', ',').replace(' ', '…')
 
+    
+
 class Word(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
@@ -51,6 +53,7 @@ class ButCtrl(LabelFrame):
             self.master.J.append("Произошла НЕХ")
         else:
             self.master.W.V.set(str(self.master.MT.rw))
+            self.master.T.markQC()
             if show: 
                 self.master.J.append(str(self.master.MT))
             return True
@@ -96,6 +99,7 @@ class PrCtrl(Frame):
         self.master.master.J.append(log)
         self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp)
         self.master.master.T.fill()
+        self.master.master.T.markQC()
 
     def Clean(self):
         self.master.E.delete(1.0, END)
@@ -139,25 +143,34 @@ class Table(LabelFrame):
         #         c       d      _
         #  q1  q1,c,R  q1,d,R  q1,_,L
         # q12 q12,d,L
-        f0 = "{:>"+str(widthS)+"} "
-        fc = "{:^"+str(widthS+4)+"} "
-        f3 = "{:>"+str(widthS)+"},{},{} "
+        self.f0 = "{:>"+str(widthS)+"} "
+        self.fc = "{:^"+str(widthS+4)+"} "
+        self.f3 = "{:>"+str(widthS)+"},{},{} "
         self.T.delete(1.0, END)
-        self.T.insert(END, f0.format(" "))
+        self.T.insert(END, self.f0.format(" "))
         for c in self.master.MT.alphabet():
-            self.T.insert(END, fc.format(c), tag(c))
+            self.T.insert(END, self.fc.format(c), tag(c))
         self.T.insert(END, '\n')
         for q in self.master.MT.states():
-            self.T.insert(END, f0.format(q), tag(q))
+            self.T.insert(END, self.f0.format(q), tag(q))
             for c in self.master.MT.alphabet():
                 if (q,c) in self.master.MT.prog:
-                    self.T.insert(END, f3.format(*(self.master.MT.prog[q,c])), tag(q+c))
+                    self.T.insert(END, self.f3.format(*(self.master.MT.prog[q,c])), tag(q+c))
                 else:
-                    self.T.insert(END, f3.format(*"   "), tag(q+c))
-            self.T.insert(END, '\n')
-        self.T.tag_config('q1', background='green')
-        self.T.tag_config('1', background='skyblue')
-        self.T.tag_config('q11', background='peachpuff')
+                    self.T.insert(END, self.f3.format(*"   "), tag(q+c))
+            self.T.insert(END, '\n')        
+
+    def markQC(self):
+        self.T.tag_delete('char')
+        self.T.tag_delete('state')
+        self.T.tag_delete('rule')
+        q,c = self.master.MT.qC, self.master.MT.rw.getsb()
+        self.T.tag_add('char', f"{tag(c)}.first", f"{tag(c)}.last")
+        self.T.tag_add('state', f"{tag(q)}.first", f"{tag(q)}.last")
+        self.T.tag_add('rule', f"{tag(q+c)}.first", f"{tag(q+c)}.last")
+        self.T.tag_config('char', background='navajo white')
+        self.T.tag_config('state', background='navajo white')
+        self.T.tag_config('rule', background='navajo white')
 
 class Journal(LabelFrame):
     def __init__(self, master=None, **kwargs):
