@@ -246,7 +246,8 @@ if __name__ == "__main__":
     P, log = parse(f.read())
     f.close()
     print(log)
-    m = MT(word, P)
+    qB = list(P.keys())[0][0]
+    m = MT(word, P, qB=qB)
     if debug:
         pprint(P)
     while m.qC != m.qE:
