@@ -8,30 +8,30 @@ from tkinter.ttk import Combobox
 def tag(s):
     return str(s).replace('.', ',').replace(' ', '…')
 
-    
+
 class Word(LabelFrame):
     def __init__(self, master=None, **kwargs):
-        LabelFrame.__init__(self, master, **kwargs)        
+        LabelFrame.__init__(self, master, **kwargs)
         self.V = StringVar()
         self.V.set('')
         self.E = Entry(self, textvariable = self.V)
         self.E.bind("<KeyPress>", self.keyPressed)
         self.E.grid(row=0, column=0, sticky='ew')
-         
+
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=0)
 
     def keyPressed(self, *args):
         if self.V.get() != self.master.MT.rw.band:
-            self.master.MT.rw.setword(self.V.get())   
-               
+            self.master.MT.rw.setword(self.V.get())
+
 
 class ButCtrl(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
         self.P = Label(self, text = "начальное\nположение")
         self.P.grid(row=0, column=0, sticky='news')
-        self.sp = Spinbox(self, from_=0, to=1, increment=1, width=3)        
+        self.sp = Spinbox(self, from_=0, to=1, increment=1, width=3)
         self.sp.grid(row=0, column=1, sticky='ew')
         self.Q = Label(self, text = "начальное\nсостояние")
         self.Q.grid(row=0, column=2, sticky='news')
@@ -39,14 +39,14 @@ class ButCtrl(LabelFrame):
         self.q.set('q1')
         self.q.grid(row=0, column=3, sticky='ew')
         self.I = IntVar(0)
-        self.S = Checkbutton(self, text="Стоп", variable = self.I)        
+        self.S = Checkbutton(self, text="Стоп", variable = self.I)
         self.S.grid(row=0, column=4, sticky="news")
         self.B = Button(self, text="Выполнить", command = self.do)
         self.B.grid(row=0, column=5, sticky="nw")
         self.F = Button(self, text="Шаг вперёд", command = self.forward)
         self.F.grid(row=0, column=6, sticky="nw")
 ##        self.Bk = Button(self, text="Шаг назад")
-##        self.Bk.grid(row=0, column=3, sticky="nw")        
+##        self.Bk.grid(row=0, column=3, sticky="nw")
         self.Bg = Button(self, text="В начало", command = self.reset)
         self.Bg.grid(row=0, column=7, sticky="nw")
         self.C = Button(self, text="Очистить", command = self.clean)
@@ -64,7 +64,7 @@ class ButCtrl(LabelFrame):
         else:
             self.master.W.V.set(str(self.master.MT.rw))
             self.master.T.markQC()
-            if show: 
+            if show:
                 self.master.J.append(str(self.master.MT))
             return True
         return False
@@ -75,7 +75,7 @@ class ButCtrl(LabelFrame):
             if self.I.get():
                 self.I.set(0)
                 break
-            
+
     def clean(self):
         self.master.W.V.set('')
 
@@ -85,8 +85,6 @@ class ButCtrl(LabelFrame):
         self.master.J.append("Установлено исходное состояние Машины Тьюринга "+str(self.master.MT))
         self.master.T.markQC()
 
-    def setState(self, *args):
-        print(args)
 
 class PrCtrl(Frame):
     def loadFile(self):
@@ -108,7 +106,7 @@ class PrCtrl(Frame):
 
     def Compile(self):
         self.master.Comp, log = parse(self.master.E.get(1.0, END))
-        self.master.master.J.J.delete(1.0, END)
+        self.master.master.J.clear()
         self.master.master.J.append(log if log else "Компиляция прошла успешно")
         states = [qc[0] for qc in self.master.master.Tp.Comp.keys()]
         qFirst = states[0]
@@ -123,9 +121,10 @@ class PrCtrl(Frame):
         self.master.master.B.q['values'] = self.master.master.MT.states()
         self.master.master.B.q.set(self.master.master.MT.qB)
 
+
     def Clean(self):
         self.master.E.delete(1.0, END)
-        
+
     def __init__(self, master=None, **kwargs):
         Frame.__init__(self, master, **kwargs)
         self.R = Button(self, text="Загрузить", command = self.loadFile)
@@ -180,7 +179,7 @@ class Table(LabelFrame):
                     self.T.insert(END, self.f3.format(*(self.master.MT.prog[q,c])), tag(q+c))
                 else:
                     self.T.insert(END, self.f3.format(*"   "), tag(q+c))
-            self.T.insert(END, '\n')        
+            self.T.insert(END, '\n')
 
     def markQC(self):
         self.T.tag_delete('char')
@@ -208,7 +207,12 @@ class Journal(LabelFrame):
         self.J.see(END)
         self.J["state"]=DISABLED
 
-        
+    def clear(self):
+        self.J["state"]=NORMAL
+        self.J.delete(1.0, END)
+        self.J["state"]=DISABLED
+
+
 
 class Program(Frame):
     def __init__(self, **kwargs):
@@ -226,7 +230,7 @@ class Program(Frame):
         self.T.grid(row=2, column=1, sticky='news')
         self.J = Journal(self, text = "Журнал")
         self.J.grid(row=3, column=1, sticky='news')
-        self.MT = MT(self.W.V.get(), self.Tp.Comp) 
+        self.MT = MT(self.W.V.get(), self.Tp.Comp)
         self.columnconfigure(0, weight=0)
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=0)
