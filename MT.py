@@ -143,7 +143,7 @@ class Pr(LabelFrame):
         # self.V.set('Текст программы')
         self.B = PrCtrl(self)
         self.B.grid(row=0, column=0, sticky="ew")
-        self.E = Text(self, width=20)
+        self.E = Text(self, width=20, autoseparators=True, undo=True)
         self.E.grid(row=1, column=0, sticky='news')
         self.Comp = {}
         self.columnconfigure(0, weight=1)
