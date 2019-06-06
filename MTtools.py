@@ -234,29 +234,25 @@ if __name__ == "__main__":
     from pprint import pprint
    
     if len(sys.argv)<2:
-        print(f"Запуск: {sys.argv[0]} программа.mt [входное_слово]", file=sys.stderr)
+        print(f"Запуск: {sys.argv[0]} программа.mt [входное_слово [начальное положение]]", file=sys.stderr)
         sys.exit(0)
     f = open(sys.argv[1])
-    if len(sys.argv)>2:
-        word = sys.argv[2]
-    else:
-        word = input('Входное слово: ')
+    word = sys.argv[2] if len(sys.argv)>2 else input('Входное слово: ')
+    pos = int(sys.argv[3]) if len(sys.argv)>3 else 0
     debug = len(sys.argv)>3 # очень временный костыль
       
     P, log = parse(f.read())
     f.close()
     print(log)
     qB = list(P.keys())[0][0]
-    m = MT(word, P, qB=qB)
+    m = MT(word, P, qB=qB, pos=pos)
     if debug:
         pprint(P)
+    cont = ""
     while m.qC != m.qE:
         if debug:
-            print(m)
-            input("> ")
+            print('\t',m)
+            if not cont:
+                cont = input("> ")
         m.step()
-    print(m.rw)
-    
-
-
-
+    print(m.rw.band)
