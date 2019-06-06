@@ -54,7 +54,7 @@ class RW:
     """Считывающее устройство Машины Тьюринга
 
     >>> print(RW())
-    _
+    [_]
     """
     band = ''
     nulsb = '_'
@@ -74,7 +74,7 @@ class RW:
         >>> a = RW()
         >>> a.setword("blabla")
         >>> print(a)
-        blabla
+        [b]labla
         >>> a.move('R'); a.move('R'); a.move('R')
         >>> a.getsb()
         'b'
@@ -95,12 +95,12 @@ class RW:
         >>> a = RW()
         >>> a.setsb('b')
         >>> print(a)
-        b
+        [b]
         """
         self.band = self.band[:self.pos]+sb+self.band[self.pos+1:]
 
     def __str__(self):
-        return self.band
+        return f"{self.band[:self.pos]}[{self.band[self.pos]}]{self.band[self.pos+1:]}"
 
     def move(self, direction):
         """ Сдвигает каретку на шаг вправо или влево
@@ -114,18 +114,18 @@ class RW:
         >>> print(a.pos)
         0
         >>> print(a)
-        _blabla
+        [_]blabla
         >>> b = RW()
         >>> b.setword('j')
         >>> b.move('R')
         >>> print(b)
-        j_
+        j[_]
         >>> print(b.pos)
         1
         >>> b.move('L')
         >>> a.move('R')
         >>> print(a, b)
-        blabla j
+        [b]labla [j]
         """
         
         if direction == 'L':
@@ -149,19 +149,19 @@ class MT:
     ... q1,_->q0,0,N''')
     >>> mt = MT('111', program)
     >>> print(mt)
-    111, 0, q1
+    [1]11, 0, q1
     >>> mt.step()
     >>> print(mt)
-    111, 1, q1
+    1[1]1, 1, q1
     >>> mt.step()
     >>> print(mt)
-    111, 2, q1
+    11[1], 2, q1
     >>> mt.step()
     >>> print(mt)
-    111_, 3, q1
+    111[_], 3, q1
     >>> mt.step()
     >>> print(mt)
-    1110, 3, q0
+    111[0], 3, q0
     >>> mt.step()
     Traceback (most recent call last):
       File "<pyshell#52>", line 1, in <module>
@@ -205,7 +205,7 @@ class MT:
         >>> mt.alphabet()
         ['0', '1', '2', '_']
         """
-        aW = set(str(self.rw))
+        aW = set(self.rw.band)
         aL = {c for q,c in self.prog}
         aR = {c for q,c,m in self.prog.values()}
         return sorted((aW|aL|aR)-{self.rw.nulsb})+[self.rw.nulsb]
