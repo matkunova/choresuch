@@ -62,7 +62,7 @@ class ButCtrl(LabelFrame):
         except Exception:
             self.master.J.append("Произошла НЕХ")
         else:
-            self.master.W.V.set(str(self.master.MT.rw))
+            self.master.W.V.set(self.master.MT.rw.band)
             self.master.T.markQC()
             if show:
                 self.master.J.append(str(self.master.MT))
@@ -115,7 +115,7 @@ class PrCtrl(Frame):
             self.master.master.B.q.set(qFirst)
             qB = qFirst
         self.master.master.MT = MT(self.master.master.W.V.get(), self.master.master.Tp.Comp, qB=qB, pos = int(self.master.master.B.sp.get()))
-        self.master.master.B.sp["to"] = len(str(self.master.master.MT.rw))-1
+        self.master.master.B.sp["to"] = len(self.master.master.MT.rw.band)-1
         self.master.master.T.fill()
         self.master.master.T.markQC()
         self.master.master.B.q['values'] = self.master.master.MT.states()
@@ -139,8 +139,6 @@ class PrCtrl(Frame):
 class Pr(LabelFrame):
     def __init__(self, master=None, **kwargs):
         LabelFrame.__init__(self, master, **kwargs)
-        # self.V = StringVar()
-        # self.V.set('Текст программы')
         self.B = PrCtrl(self)
         self.B.grid(row=0, column=0, sticky="ew")
         self.E = Text(self, width=20, autoseparators=True, undo=True)
@@ -213,7 +211,6 @@ class Journal(LabelFrame):
         self.J["state"]=DISABLED
 
 
-
 class Program(Frame):
     def __init__(self, **kwargs):
         Frame.__init__(self, **kwargs)
@@ -240,4 +237,7 @@ class Program(Frame):
 
 P = Program()
 P.mainloop()
-P.master.destroy()
+try:
+    P.master.destroy()
+except TclError:
+    pass
